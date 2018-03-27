@@ -617,7 +617,7 @@ class Infusionsoft
     /**
      * @return \Infusionsoft\Api\APIEmailService
      */
-    public function emails($api = 'rest')
+    public function emails($api = 'xml')
     {
         if ($api == 'xml') {
             return $this->getApi('APIEmailService');
@@ -630,7 +630,7 @@ class Infusionsoft
     /**
      * @return \Infusionsoft\Api\FileService
      */
-    public function files($api = 'rest')
+    public function files($api = 'xml')
     {
         if ($api == 'xml') {
             return $this->getApi('FileService');
