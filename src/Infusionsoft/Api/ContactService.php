@@ -152,18 +152,19 @@ class ContactService extends AbstractApi {
 	{
 		return $this->client->request('ContactService.update', $contactId, $data);
 	}
+	
+	/**
+	 * @param integer $contactId1
+	 * @param integer $contactId2
+	 * @param integer $linkId
+	 * @return integer
+	 */
+	public function linkContacts($contactId1, $contactId2, $linkId)
+	{
+	    return $this->client->request("ContactService.linkContacts", $contactId1, $contactId2, $linkId);
+	}
 
     /**
-     * @param array $data
-     * @return boolean
-     */
-    public function linkContacts($cid1, $cid2, $linkId)
-    {
-        return $this->client->request('ContactService.linkContacts', $cid1, $cid2, $linkId);
-    }
-
-    /**
-     * @param $privateKey
      * @param $cid
      * @return mixed
      */

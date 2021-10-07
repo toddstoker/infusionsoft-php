@@ -2,11 +2,11 @@
 
 namespace Infusionsoft;
 
-use Infusionsoft\Http\CurlClient;
 use Mockery as m;
 use Psr\Log\NullLogger;
+use PHPUnit\Framework\TestCase;
 
-class InfusionsoftTest extends \PHPUnit_Framework_TestCase
+class InfusionsoftTest extends TestCase
 {
 
     /**
@@ -14,7 +14,7 @@ class InfusionsoftTest extends \PHPUnit_Framework_TestCase
      */
     protected $ifs;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->ifs = new Infusionsoft(array(
             'clientId'     => 'foo',
@@ -135,16 +135,10 @@ class InfusionsoftTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Infusionsoft\Http\GuzzleHttpClient', $this->ifs->getHttpClient());
     }
 
-    public function testSettingHttpClientToCurl()
-    {
-        $this->ifs->setHttpClient(new CurlClient());
-        $this->assertInstanceOf('Infusionsoft\Http\CurlClient', $this->ifs->getHttpClient());
-    }
-
     public function testRequestingAccessTokenSetsAccessToken()
     {
         $client = m::mock('Infusionsoft\Http\GuzzleHttpClient');
-        $client->shouldReceive('request')->once()->withAnyArgs()->andReturn(json_encode(['access_token' => 'access_token']));
+        $client->shouldReceive('call')->once()->withAnyArgs()->andReturn(json_encode(['access_token' => 'access_token']));
 
         $this->ifs->setClientId('foo');
         $this->ifs->setClientSecret('bar');

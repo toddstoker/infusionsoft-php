@@ -3,6 +3,7 @@
 use Infusionsoft\Api\Rest\Traits\CannotCreate;
 use Infusionsoft\Api\Rest\Traits\CannotDelete;
 use Infusionsoft\Api\Rest\Traits\CannotFind;
+use Infusionsoft\Api\Rest\Traits\CannotModel;
 use Infusionsoft\Api\Rest\Traits\CannotSave;
 use Infusionsoft\Api\Rest\Traits\CannotSync;
 use Infusionsoft\Api\Rest\Traits\CannotWhere;
@@ -11,11 +12,7 @@ use Infusionsoft\InfusionsoftException;
 
 class TagService extends RestModel
 {
-    use CannotSync;
-    use CannotSave;
-    use CannotDelete;
-    use CannotFind;
-    use CannotWhere;
+    use CannotSync, CannotDelete, CannotModel;
 
     public $full_url = 'https://api.infusionsoft.com/crm/rest/v1/tags';
 
@@ -26,9 +23,9 @@ class TagService extends RestModel
         parent::__construct($client);
     }
 
-    public function contacts()
+    public function contacts($where = [])
     {
-        $data = $this->client->restfulRequest('get', $this->getFullUrl($this->id . '/contacts'));
+        $data = $this->client->restfulRequest('get', $this->getFullUrl($this->id . '/contacts'), $where);
         $this->fill($data);
 
         return $this;

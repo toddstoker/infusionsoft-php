@@ -10,10 +10,6 @@ $infusionsoft = new \Infusionsoft\Infusionsoft(array(
 	'redirectUri' => '',
 ));
 
-// By default, the SDK uses the Guzzle HTTP library for requests. To use CURL,
-// you can change the HTTP client by using following line:
-// $infusionsoft->setHttpClient(new \Infusionsoft\Http\CurlClient());
-
 // If the serialized token is available in the session storage, we tell the SDK
 // to use that token for subsequent requests.
 if (isset($_SESSION['token'])) {
@@ -24,6 +20,9 @@ if (isset($_SESSION['token'])) {
 // access token.
 if (isset($_GET['code']) and !$infusionsoft->getToken()) {
 	$infusionsoft->requestAccessToken($_GET['code']);
+
+    // Save the serialized token to the current session for subsequent requests
+    $_SESSION['token'] = serialize($infusionsoft->getToken());
 }
 
 function taskManager($infusionsoft) {
