@@ -274,7 +274,7 @@ class Infusionsoft
 
         $client = $this->getHttpClient();
 
-        $tokenInfo = $client->request('POST', $this->tokenUri, [
+        $tokenInfo = $client->call('POST', $this->tokenUri, [
             'body'    => http_build_query($params),
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded']
         ]);
@@ -314,7 +314,7 @@ class Infusionsoft
 
         $client = $this->getHttpClient();
 
-        $tokenInfo = $client->request('POST', $this->tokenUri,
+        $tokenInfo = $client->call('POST', $this->tokenUri,
             ['body' => http_build_query($params), 'headers' => $headers]);
 
         $this->setToken(new Token(json_decode($tokenInfo, true)));
@@ -497,7 +497,7 @@ class Infusionsoft
             'Content-Type' => 'application/json',
         );
 
-        $response = (string)$client->request($method, $url, $full_params);
+        $response = (string)$client->call($method, $url, $full_params);
 
         return json_decode($response, true);
     }
@@ -517,6 +517,7 @@ class Infusionsoft
     /**
      * @param \DateTime|string $datetime
      *
+     * @throws \Exception
      * @return string
      */
     public function formatDate($datetime = 'now')
@@ -546,6 +547,7 @@ class Infusionsoft
             'files',
             'funnels',
             'invoices',
+            'merchants',
             'orders',
             'products',
             'search',
@@ -579,7 +581,9 @@ class Infusionsoft
     }
 
     /**
-     * @return \Infusionsoft\Api\ContactService
+     * @param string $api
+     *
+     * @return \Infusionsoft\Api\ContactService | \Infusionsoft\Api\Rest\ContactService
      */
     public function contacts($api = 'xml')
     {
@@ -615,7 +619,9 @@ class Infusionsoft
     }
 
     /**
-     * @return \Infusionsoft\Api\APIEmailService
+     * @param string $api
+     *
+     * @return \Infusionsoft\Api\APIEmailService | \Infusionsoft\Api\Rest\EmailService
      */
     public function emails($api = 'xml')
     {
@@ -624,11 +630,12 @@ class Infusionsoft
         }
 
         return $this->getRestApi('EmailService');
-
     }
 
     /**
-     * @return \Infusionsoft\Api\FileService
+     * @param string $api
+     *
+     * @return \Infusionsoft\Api\FileService | \Infusionsoft\Api\Rest\FileService
      */
     public function files($api = 'xml')
     {
@@ -637,7 +644,6 @@ class Infusionsoft
         }
 
         return $this->getRestApi('FileService');
-
     }
 
     /**
@@ -657,9 +663,17 @@ class Infusionsoft
     }
 
     /**
+     * @return \Infusionsoft\Api\Rest\MerchantService
+     */
+    public function merchants()
+    {
+        return $this->getRestApi('MerchantService');
+    }
+
+    /**
      * @param string $api
      *
-     * @return mixed
+     * @return \Infusionsoft\Api\OrderService | \Infusionsoft\Api\Rest\OrderService
      */
     public function orders($api = 'rest')
     {
@@ -673,7 +687,7 @@ class Infusionsoft
     /**
      * @param string $api
      *
-     * @return mixed
+     * @return \Infusionsoft\Api\ProductService | \Infusionsoft\Api\Rest\ProductService
      */
     public function products($api = 'rest')
     {
@@ -733,6 +747,14 @@ class Infusionsoft
     }
 
     /**
+     * @return \Infusionsoft\Api\Rest\NoteService
+     */
+    public function notes()
+    {
+        return $this->getRestApi('NoteService');
+    }
+
+    /**
      * @return \Infusionsoft\Api\Rest\AppointmentService
      */
     public function appointments()
@@ -772,12 +794,36 @@ class Infusionsoft
         return $this->getRestApi('CampaignService');
     }
 
+	/**
+	 * @return \Infusionsoft\Api\Rest\CampaignService
+	 */
+	public function companies()
+	{
+		return $this->getRestApi('CompanyService');
+	}
+
+    /**
+     * @return \Infusionsoft\Api\Rest\UserInfoService
+     */
+    public function userinfo()
+    {
+        return $this->getRestApi('UserInfoService');
+    }
+
     /**
      * @return \Infusionsoft\Api\Rest\OpportunityService
      */
     public function opportunities()
     {
         return $this->getRestApi('OpportunityService');
+    }
+
+    /**
+     * @return \Infusionsoft\Api\Rest\SubscriptionService
+     */
+    public function subscriptions()
+    {
+        return $this->getRestApi('SubscriptionService');
     }
 
     /**

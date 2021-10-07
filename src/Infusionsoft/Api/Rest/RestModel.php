@@ -239,8 +239,14 @@ abstract class RestModel implements ArrayAccess, JsonSerializable
 
     public function get()
     {
+
+        $params = $this->where;
+        if (!empty($this->optionalProperities)) {
+          $params['optional_properties'] = implode(',', $this->optionalProperities);
+        }
+
         if (!empty($this->where)) {
-            $data = $this->client->restfulRequest('get', $this->getIndexUrl(), $this->where);
+            $data = $this->client->restfulRequest('get', $this->getIndexUrl(), $params);
         } else {
             $data = $this->client->restfulRequest('get', $this->getIndexUrl());
         }
@@ -261,8 +267,13 @@ abstract class RestModel implements ArrayAccess, JsonSerializable
 
         $this->where('limit', 1);
 
-        if (!empty($this->where)) {
-            $data = $this->client->restfulRequest('get', $this->getIndexUrl(), $this->where);
+        $params = $this->where;
+        if (!empty($this->optionalProperities)) {
+          $params['optional_properties'] = implode(',', $this->optionalProperities);
+        }
+
+        if (!empty($params)) {
+            $data = $this->client->restfulRequest('get', $this->getIndexUrl(), $params);
         } else {
             $data = $this->client->restfulRequest('get', $this->getIndexUrl());
         }
@@ -283,6 +294,15 @@ abstract class RestModel implements ArrayAccess, JsonSerializable
 
     }
 
+    public function count()
+    {
+        $this->where('limit', 1);
+
+        $data = $this->client->restfulRequest('get', $this->getIndexUrl(), $this->where);
+
+        return $data['count'];
+    }
+
     public function all()
     {
         $data = $this->client->restfulRequest('get', $this->getIndexUrl());
@@ -297,6 +317,15 @@ abstract class RestModel implements ArrayAccess, JsonSerializable
 
         return $collection;
     }
+
+	public function model()
+	{
+		$data = $this->client->restfulRequest('get', $this->getFullUrl('model'));
+		$this->fill($data);
+
+		return $this;
+	}
+
 
     public function collect(array $array, $cursor = [])
     {
