@@ -5,6 +5,7 @@ namespace Infusionsoft\Http;
 use fXmlRpc\Transport\HttpAdapterTransport;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Psr7\Request;
@@ -52,8 +53,8 @@ class GuzzleHttpClient extends Client implements ClientInterface
      * @param string $uri
      * @param array $options
      *
-     * @return mixed
-     * @throws HttpException
+     * @return \Psr\Http\Message\StreamInterface
+     * @throws HttpException|\GuzzleHttp\Exception\GuzzleException
      */
     public function call($method, $uri = null, array $options = [])
     {
@@ -70,7 +71,7 @@ class GuzzleHttpClient extends Client implements ClientInterface
             $response = $this->send($request);
 
             return $response->getBody();
-        } catch (BadResponseException $e) {
+        } catch (BadResponseException|ConnectException $e) {
             throw new HttpException($e->getMessage(), $e->getCode(), $e);
         }
     }
