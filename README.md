@@ -202,7 +202,9 @@ $infusionsoft->setHttpLogAdapter($logger);
 $ phpunit
 ```
 
-## Laravel 5.1 Service Provider
+## Laravel Framework Support
+
+### Laravel < 5.5
 
 In config/app.php, register the service provider
 
@@ -215,6 +217,10 @@ Register the Facade (optional)
 ```
 'Infusionsoft'       => Infusionsoft\FrameworkSupport\Laravel\InfusionsoftFacade::class
 ```
+
+### Laravel >= 5.5
+
+In Laravel 5.5, package auto-discovery was added. The service provider and facade will be detected for you. Continue by publishing the vendor assets and adding your env variables.
 
 Publish the config
 
@@ -260,6 +266,23 @@ Access Infusionsoft from the Binding
  $data = app('infusionsoft')->data()->query("Contact",1000,0,['Id' => '123'],['Id','FirstName','LastName','Email'], 'Id', false);
 ```
 
+## SDK Development
+You can install the Composer dependencies without installing Composer:
+```
+docker-compose run composer
+```
+
+You can access the samples by spinning up the Docker container for the Composer dependencies:
+```
+docker-compose up -d
+```
+
+Tests can be executed without installing PHP in the host environment (while the main container is running):
+```
+docker exec -it infusionsoft-php /var/www/html/vendor/bin/phpunit tests
+```
+
+If using Docker for Windows, please see `.env` for additional details.
 ## Contributing
 
 Please see [CONTRIBUTING](https://github.com/infusionsoft/infusionsoft-php/blob/master/CONTRIBUTING.md) for details.
