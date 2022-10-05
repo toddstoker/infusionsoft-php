@@ -433,24 +433,30 @@ class Infusionsoft
         // Before making the request, we can make sure that the token is still
         // valid by doing a check on the end of life.
         $token = $this->getToken();
-        if ($this->isTokenExpired()) {
-            throw new TokenExpiredException;
-        }
-
-        $url = $this->url . '?' . http_build_query(array('access_token' => $token->getAccessToken()));
 
         $params = func_get_args();
         $method = array_shift($params);
 
-        // Some older methods in the API require a key parameter to be sent
-        // even if OAuth is being used. This flag can be made false as it
-        // will break some newer endpoints.
-        if ($this->needsEmptyKey) {
-            $params = array_merge(array('key' => $token->getAccessToken()), $params);
-        }
+        if ($token->isApiKeyToken()) {
+            $url = "https://{$token->getAppName()}.infusionsoft.com/api/xmlrpc";
+            $params = array_merge(array('key' => $token->getApiKey()), $params);
+        } else {
+            if ($this->isTokenExpired()) {
+                throw new TokenExpiredException;
+            }
 
-        // Reset the empty key flag back to the default for the next request
-        $this->needsEmptyKey = true;
+            $url = $this->url . '?' . http_build_query(array('access_token' => $token->getAccessToken()));
+
+            // Some older methods in the API require a key parameter to be sent
+            // even if OAuth is being used. This flag can be made false as it
+            // will break some newer endpoints.
+            if ($this->needsEmptyKey) {
+                $params = array_merge(array('key' => $token->getAccessToken()), $params);
+            }
+
+            // Reset the empty key flag back to the default for the next request
+            $this->needsEmptyKey = true;
+        }
 
         $client   = $this->getSerializer();
         $response = $client->request($method, $url, $params, $this->getHttpClient());

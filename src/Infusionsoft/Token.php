@@ -24,7 +24,11 @@ class Token {
 	 */
 	public $extraInfo;
 
-	/**
+    public $apiKey;
+
+    public $appName;
+
+    /**
 	 * @param array $data
 	 */
 	function __construct($data = array())
@@ -116,6 +120,51 @@ class Token {
 	{
 		$this->extraInfo = $extraInfo;
 	}
+
+    public static function createApiKeyToken($appName, $apiKey)
+    {
+        $instance = new self();
+        $instance->setAppName($appName);
+        $instance->setApiKey($apiKey);
+        return $instance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param mixed $apiKey
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppName()
+    {
+        return $this->appName;
+    }
+
+    /**
+     * @param mixed $appName
+     */
+    public function setAppName($appName)
+    {
+        $this->appName = $appName;
+    }
+
+    public function isApiKeyToken()
+    {
+        return $this->getApiKey() && $this->getAppName();
+    }
 
     /**
      * Checks if the token is expired
