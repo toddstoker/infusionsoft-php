@@ -6,9 +6,9 @@ use Infusionsoft\Infusionsoft;
 
 abstract class AbstractApi {
 
-	public function __construct(Infusionsoft $client)
-	{
-		$this->client = $client;
+	public function __construct(
+        public Infusionsoft $client
+    ) {
 	}
 
 }
