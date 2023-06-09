@@ -42,5 +42,10 @@
                 "Infusionsoft": "Infusionsoft\\FrameworkSupport\\Laravel\\InfusionsoftFacade"
             }
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
