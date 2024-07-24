@@ -92,6 +92,8 @@ class Infusionsoft
      */
     protected $authenticationType;
 
+    public $defaultToXML = false;
+
     /**
      * @param array $config
      */
@@ -614,8 +616,10 @@ class Infusionsoft
      *
      * @return \Infusionsoft\Api\ContactService | \Infusionsoft\Api\Rest\ContactService
      */
-    public function contacts($api = 'rest')
+    public function contacts($api = null)
     {
+        $api = $this->resolveXMLableServiceType($api);
+
         if ($api == 'xml') {
             return $this->getApi('ContactService');
         }
@@ -652,8 +656,10 @@ class Infusionsoft
      *
      * @return \Infusionsoft\Api\APIEmailService | \Infusionsoft\Api\Rest\EmailService
      */
-    public function emails($api = 'rest')
+    public function emails($api = null)
     {
+        $api = $this->resolveXMLableServiceType($api);
+
         if ($api == 'xml') {
             return $this->getApi('APIEmailService');
         }
@@ -666,8 +672,10 @@ class Infusionsoft
      *
      * @return \Infusionsoft\Api\FileService | \Infusionsoft\Api\Rest\FileService
      */
-    public function files($api = 'rest')
+    public function files($api = null)
     {
+        $api = $this->resolveXMLableServiceType($api);
+
         if ($api == 'xml') {
             return $this->getApi('FileService');
         }
@@ -704,8 +712,10 @@ class Infusionsoft
      *
      * @return \Infusionsoft\Api\OrderService | \Infusionsoft\Api\Rest\OrderService
      */
-    public function orders($api = 'rest')
+    public function orders($api = null)
     {
+        $api = $this->resolveXMLableServiceType($api);
+
         if ($api == 'xml') {
             return $this->getApi('OrderService');
         }
@@ -718,8 +728,10 @@ class Infusionsoft
      *
      * @return \Infusionsoft\Api\ProductService | \Infusionsoft\Api\Rest\ProductService
      */
-    public function products($api = 'rest')
+    public function products($api = null)
     {
+        $api = $this->resolveXMLableServiceType($api);
+
         if ($api == 'xml') {
             return $this->getApi('ProductService');
         }
@@ -909,5 +921,17 @@ class Infusionsoft
         return $options;
     }
 
+    public function resolveXMLableServiceType(?string $passedArgument)
+    {
+        if (in_array($passedArgument, ['xml', 'rest'])) {
+            return $passedArgument;
+        }
+
+        if ($this->defaultToXML) {
+            return 'xml';
+        }
+
+        return 'rest';
+    }
 }
 
